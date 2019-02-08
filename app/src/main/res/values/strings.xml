@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">StockSim</string>
+    <string name="counter_text">Counter</string>
+    <string name="counterText"></string>
+</resources>
