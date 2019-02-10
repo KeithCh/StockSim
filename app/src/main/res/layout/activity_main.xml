@@ -1,75 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal">
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:layout_centerInParent="true">
 
-    <TextView
-        android:id="@+id/tickerText"
+    <fragment
+        android:id="@+id/add_order"
+        android:name="com.keith.stocksim.AddOrderFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
-        android:gravity="center_horizontal"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:text="Ticker Symbol"
-        />
-
-    <EditText
-        android:id="@+id/tickerEdit"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textStyle="bold"
-        android:layout_marginVertical="20dp"
-        android:textSize="15sp"
-        android:text=""
-        />
-
-    <TextView
-        android:id="@+id/orderSizeText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
-        android:gravity="center_horizontal"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:text="Number of Shares"
-        />
-
-    <EditText
-        android:id="@+id/orderSizeEdit"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textStyle="bold"
-        android:layout_marginVertical="20dp"
-        android:textSize="15sp"
-        android:text=""
-        />
-
-    <Button
-        android:id="@+id/counterButton"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Place Order"
-        android:onClick="addOrder"
-        />
+        android:gravity="center" />
 
-    <TextView
-        android:id="@+id/portfolio"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textStyle="bold"
-        android:layout_marginVertical="75dp"
-        android:textSize="25sp"
-        android:text=""
-        />
+        android:layout_height="match_parent">
+
+        <include
+            layout="@layout/activity_navbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
 
 
 </LinearLayout>
