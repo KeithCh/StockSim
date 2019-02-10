@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.keith.stocksim.repository.Quote;
@@ -27,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,9 +38,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Path;
 
 
-public class MainActivity extends AppCompatActivity {
-    ProgressDialog pd;
-    double price = 0;
+public class MainActivity extends Toolbar {
+    private double price = 0;
     private SharedPreferences mPreferences;
     private SharedPreferences.Editor mEditor;
     public void updateList() {
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
+
                 try {
                     price = theQuote.execute().body().quote.latestPrice;
                 } catch (IOException ie) {
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 latch.countDown();
             }
         });
+
         thread.start();
         try {
             latch.await();
@@ -96,15 +99,12 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         updateList();
-        System.out.println("hello");
-        System.out.println(price);
     }
 }
 
