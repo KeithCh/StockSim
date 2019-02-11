@@ -8,17 +8,30 @@
     android:orientation="vertical"
     android:layout_centerInParent="true">
 
-    <fragment
-        android:id="@+id/add_order"
-        android:name="com.keith.stocksim.AddOrderFragment"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center" />
-
+        android:layout_weight="1" />
+    <!--<fragment-->
+        <!--android:id="@+id/add_order"-->
+        <!--android:name="com.keith.stocksim.AddOrderFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="130dp"-->
+        <!--android:gravity="center" />-->
+    <!--<fragment-->
+        <!--android:id="@+id/portfolio"-->
+        <!--android:name="com.keith.stocksim.PortfolioFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:gravity="center" />-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <include
             layout="@layout/activity_navbar"

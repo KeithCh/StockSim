@@ -33,21 +33,10 @@ public class MainActivity extends Navbar {
     private double price = 0;
     private SharedPreferences mPreferences;
     private SharedPreferences.Editor mEditor;
-//    public void updateList() {
-//        Map<String,?> keys = mPreferences.getAll();
-//        StringBuilder list = new StringBuilder();
-//        for (Map.Entry<String,?> entry : keys.entrySet()) {
-//            list.append(entry.getKey() + " ");
-//            getPrice(entry.getKey());
-//            list.append(Double.toString(price) + " ");
-//            list.append(entry.getValue() + "\n");
-//        }
-//        TextView sharedPreferences =(TextView) findViewById(R.id.portfolio);
-//        sharedPreferences.setText(list.toString());
-//    }
+
     public void updateList() {
-        final ProgressBar pbar = (ProgressBar) findViewById(R.id.pBar);
-        pbar.setVisibility(View.VISIBLE);
+//        final ProgressBar pbar = (ProgressBar) findViewById(R.id.pBar);
+//        pbar.setVisibility(View.VISIBLE);
         Thread thread = new Thread(new Runnable() {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://api.iextrading.com/")
@@ -76,7 +65,7 @@ public class MainActivity extends Navbar {
                         @Override
                         public void run() {
 //                            setListText(sharedPreferences, list.toString());
-                            pbar.setVisibility(View.INVISIBLE);
+//                            pbar.setVisibility(View.INVISIBLE);
                         }
                     });
                 } catch (IOException ie) {}
@@ -106,6 +95,11 @@ public class MainActivity extends Navbar {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AddOrderFragment aof = new AddOrderFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, aof)
+                .commit();
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         updateList();
     }
