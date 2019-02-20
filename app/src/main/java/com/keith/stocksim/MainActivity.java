@@ -5,10 +5,17 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,79 +36,83 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class MainActivity extends Navbar {
-    private double price = 0;
+public class MainActivity extends FragmentActivity {
     private SharedPreferences mPreferences;
     private SharedPreferences.Editor mEditor;
+    private ViewPager viewPager;
+    BottomNavigationView bottomNavigationView;
+    MenuItem prevMenuItem;
+    PortfolioFragment portfolioFragment;
+    AddOrderFragment addOrderFragment;
+    Button addOrderButton;
 
-    public void updateList() {
-//        final ProgressBar pbar = (ProgressBar) findViewById(R.id.pBar);
-//        pbar.setVisibility(View.VISIBLE);
-        Thread thread = new Thread(new Runnable() {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.iextrading.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            IextradingInterface service = retrofit.create(IextradingInterface.class);
-
-
-            public void setListText(TextView sharedPreferences, String list) {
-                sharedPreferences.setText(list);
-            }
-            @Override
-            public void run() {
-                try {
-                    Map<String,?> keys = mPreferences.getAll();
-                    final StringBuilder list = new StringBuilder();
-                    for (Map.Entry<String,?> entry : keys.entrySet()) {
-                        list.append(entry.getKey() + " ");
-                        Call<StockQuery> theQuote = service.getQuote(entry.getKey());
-                        price = theQuote.execute().body().quote.latestPrice;
-                        list.append(Double.toString(price) + " ");
-                        list.append(entry.getValue() + "\n");
-                    }
-//                    final TextView sharedPreferences =(TextView) findViewById(R.id.portfolio);
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-//                            setListText(sharedPreferences, list.toString());
-//                            pbar.setVisibility(View.INVISIBLE);
-                        }
-                    });
-                } catch (IOException ie) {}
-            }
-        });
-
-        thread.start();
-    }
-
-    public void addOrder(View view){
-        mEditor = mPreferences.edit();
-        EditText tickerEdit =(EditText) findViewById(R.id.tickerEdit);
-        String tickerSymbol = tickerEdit.getText().toString().toUpperCase();
-        if (tickerSymbol.equals("")) {
-            return;
-        }
-        EditText sharesEdit = (EditText) findViewById(R.id.orderSizeEdit);
-        Integer newShares = Integer.parseInt(sharesEdit.getText().toString());
-        Integer oldShares = Integer.parseInt(mPreferences.getString(tickerSymbol, newShares.toString()));
-        Integer totalShares = newShares + oldShares;
-        mEditor.putString(tickerSymbol, totalShares.toString());
-        mEditor.commit();
-        updateList();
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        portfolioFragment = new PortfolioFragment();
+        addOrderFragment = new AddOrderFragment();
+        addOrderFragment.mPreferences = mPreferences;
+        portfolioFragment.mPreferences = mPreferences;
+        adapter.addFragment(portfolioFragment);
+        adapter.addFragment(addOrderFragment);
+        viewPager.setAdapter(adapter);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AddOrderFragment aof = new AddOrderFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, aof)
-                .commit();
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        updateList();
+        //Initializing viewPager
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.action_overview:
+                                viewPager.setCurrentItem(0);
+                                break;
+                            case R.id.action_portfolio:
+                                viewPager.setCurrentItem(1);
+                                break;
+                            case R.id.action_addorder:
+                                viewPager.setCurrentItem(2);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                }
+                else
+                {
+                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                Log.d("page", "onPageSelected: "+position);
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        setupViewPager(viewPager);
+    }
+    public void addOrder(View v) {
+        addOrderFragment.addOrder();
     }
 }
 

@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    <item android:id="@+id/action_search"
+    <item android:id="@+id/action_overview"
         android:title="Overview"
         android:icon="@drawable/juad" />
-    <item android:id="@+id/action_settings"
+    <item android:id="@+id/action_portfolio"
         android:title="Portfolio"
         android:icon="@drawable/juad" />
-    <item android:id="@+id/action_navigation"
+    <item android:id="@+id/action_addorder"
         android:title="Add Order"
         android:icon="@drawable/juad" />
     </menu>

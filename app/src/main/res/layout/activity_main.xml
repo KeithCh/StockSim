@@ -1,44 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:layout_gravity="center"
-    android:orientation="vertical"
-    android:layout_centerInParent="true">
+    android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1" />
-    <!--<fragment-->
-        <!--android:id="@+id/add_order"-->
-        <!--android:name="com.keith.stocksim.AddOrderFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_marginTop="130dp"-->
-        <!--android:gravity="center" />-->
-    <!--<fragment-->
-        <!--android:id="@+id/portfolio"-->
-        <!--android:name="com.keith.stocksim.PortfolioFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:gravity="center" />-->
-    <RelativeLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include
-            layout="@layout/activity_navbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/navigation"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
-</LinearLayout>
+    <android.support.design.widget.BottomNavigationView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/nav_items"/>
+
+
+</RelativeLayout>
