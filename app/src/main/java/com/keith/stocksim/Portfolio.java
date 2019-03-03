@@ -1,14 +1,29 @@
 package com.keith.stocksim;
 
-import android.os.Bundle;
-import android.app.Activity;
+public class Portfolio {
+    String ticker;
+    int numShares;
+    double startValue;
 
-public class Portfolio extends Activity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_portfolio);
+    public Portfolio() {}
+    public Portfolio(String ticker, int numShares, double startValue) {
+        this.ticker = ticker;
+        this.numShares = numShares;
+        this.startValue = startValue;
     }
-
+    public String getTicker() {
+        return this.ticker;
+    }
+    public int getNumShares(){
+        return this.numShares;
+    }
+    public void setNumShares(int numShares){
+        this.numShares = numShares;
+    }
+    public double getStartValue(){
+        return this.startValue;
+    }
+    public void setNumShares(double startValue){
+        this.startValue = startValue;
+    }
 }
