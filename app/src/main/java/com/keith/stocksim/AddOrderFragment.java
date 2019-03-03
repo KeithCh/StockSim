@@ -26,6 +26,9 @@ public class AddOrderFragment extends Fragment {
         Integer oldShares = Integer.parseInt(mPreferences.getString(tickerSymbol, newShares.toString()));
         Integer totalShares = newShares + oldShares;
         mEditor.putString(tickerSymbol, totalShares.toString());
+        if (totalShares == 0) {
+            mEditor.remove(tickerSymbol);
+        }
         mEditor.commit();
     }
     @Override

@@ -72,6 +72,7 @@ public class MainActivity extends FragmentActivity {
                         switch (item.getItemId()) {
                             case R.id.action_overview:
                                 viewPager.setCurrentItem(0);
+                                portfolioFragment.updateList();
                                 break;
                             case R.id.action_portfolio:
                                 viewPager.setCurrentItem(1);
@@ -91,6 +92,9 @@ public class MainActivity extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
+                if (position == 0) {
+                    portfolioFragment.updateList();
+                }
                 if (prevMenuItem != null) {
                     prevMenuItem.setChecked(false);
                 }
