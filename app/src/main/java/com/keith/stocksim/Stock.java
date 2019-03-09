@@ -1,15 +1,18 @@
 package com.keith.stocksim;
 
-public class Portfolio {
+public class Stock {
     String ticker;
     int numShares;
     double startValue;
 
-    public Portfolio() {}
-    public Portfolio(String ticker, int numShares, double startValue) {
+    public Stock() {}
+    public Stock(String ticker, int numShares, double startValue) {
         this.ticker = ticker;
         this.numShares = numShares;
         this.startValue = startValue;
+    }
+    public void setTicker(String ticker) {
+        this.ticker = ticker;
     }
     public String getTicker() {
         return this.ticker;
@@ -23,7 +26,7 @@ public class Portfolio {
     public double getStartValue(){
         return this.startValue;
     }
-    public void setNumShares(double startValue){
+    public void setStartValue(double startValue){
         this.startValue = startValue;
     }
 }

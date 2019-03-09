@@ -13,9 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class AddOrderFragment extends Fragment {
-    SharedPreferences mPreferences;
+//    SharedPreferences mPreferences;
+    DatabaseHandler db;
     public void addOrder(){
-        SharedPreferences.Editor mEditor = mPreferences.edit();
+//        SharedPreferences.Editor mEditor = mPreferences.edit();
+        db =  ((MainActivity) getActivity()).db;
         EditText tickerEdit =(EditText) getView().findViewById(R.id.tickerEdit);
         String tickerSymbol = tickerEdit.getText().toString().toUpperCase();
         if (tickerSymbol.equals("")) {
@@ -23,13 +25,16 @@ public class AddOrderFragment extends Fragment {
         }
         EditText sharesEdit = (EditText) getView().findViewById(R.id.orderSizeEdit);
         Integer newShares = Integer.parseInt(sharesEdit.getText().toString());
-        Integer oldShares = Integer.parseInt(mPreferences.getString(tickerSymbol, newShares.toString()));
+        Integer oldShares = (db.getStock(tickerSymbol) != null)? db.getStock(tickerSymbol).numShares:0;
+//        Integer oldShares = Integer.parseInt(mPreferences.getString(tickerSymbol, newShares.toString()));
         Integer totalShares = newShares + oldShares;
-        mEditor.putString(tickerSymbol, totalShares.toString());
+//        mEditor.putString(tickerSymbol, totalShares.toString());
         if (totalShares == 0) {
-            mEditor.remove(tickerSymbol);
+//            mEditor.remove(tickerSymbol);
+            db.deleteStock(new Stock(tickerSymbol, 0,0));
         }
-        mEditor.commit();
+//        mEditor.commit();
+        db.addStock(new Stock(tickerSymbol, totalShares, 0));
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
