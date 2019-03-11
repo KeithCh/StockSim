@@ -5,10 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".PortfolioFragment">
 
-    <TextView
-        android:id="@+id/portfolio"
+    <!--<TextView-->
+        <!--android:id="@+id/portfolio"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="187dp"-->
+        <!--android:text="@string/portfolio" />-->
+
+    <ListView
+        android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/portfolio" />
+        android:layout_height="wrap_content"
+    />
 
 </FrameLayout>

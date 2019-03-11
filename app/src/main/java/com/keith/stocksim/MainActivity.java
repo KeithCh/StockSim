@@ -15,8 +15,10 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -27,6 +29,8 @@ import com.keith.stocksim.support.IextradingInterface;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -45,12 +49,12 @@ public class MainActivity extends FragmentActivity {
     PortfolioFragment portfolioFragment;
     AddOrderFragment addOrderFragment;
     Button addOrderButton;
-
+    DatabaseHandler db;
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         portfolioFragment = new PortfolioFragment();
         addOrderFragment = new AddOrderFragment();
-        addOrderFragment.mPreferences = mPreferences;
+//        addOrderFragment.mPreferences = mPreferences;
         portfolioFragment.mPreferences = mPreferences;
         adapter.addFragment(portfolioFragment);
         adapter.addFragment(addOrderFragment);
@@ -62,6 +66,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        db = new DatabaseHandler(this);
         //Initializing viewPager
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigation);
@@ -114,6 +119,7 @@ public class MainActivity extends FragmentActivity {
             }
         });
         setupViewPager(viewPager);
+//        db.deleteStock(null);
     }
     public void addOrder(View v) {
         addOrderFragment.addOrder();
