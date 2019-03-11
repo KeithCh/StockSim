@@ -119,6 +119,7 @@ public class MainActivity extends FragmentActivity {
             }
         });
         setupViewPager(viewPager);
+//        db.deleteStock(null);
     }
     public void addOrder(View v) {
         addOrderFragment.addOrder();

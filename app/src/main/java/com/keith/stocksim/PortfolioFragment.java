@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -44,26 +45,20 @@ public class PortfolioFragment extends Fragment {
             IextradingInterface service = retrofit.create(IextradingInterface.class);
 
 
-            public void setListText(TextView sharedPreferences, String list) {
-                sharedPreferences.setText(list);
-            }
             @Override
             public void run() {
                 try {
-                    Map<String,?> keys = mPreferences.getAll();
-                    final StringBuilder list = new StringBuilder();
                     final List<String> your_array_list = new ArrayList<String>();
                     List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
                     for (Stock s: allStocks) {
-                        your_array_list.add(s.ticker + "           " + Integer.toString(s.numShares));
+                        Call<StockQuery> theQuote = service.getQuote(s.getTicker());
+                        Response<StockQuery> response = theQuote.execute();
+                        if (response.body() != null) {
+                            price = response.body().quote.latestPrice;
+                            your_array_list.add(s.ticker + "           " + Integer.toString(s.numShares) + "             " + price );
+                        }
                     }
-                    for (Map.Entry<String,?> entry : keys.entrySet()) {
-//                        list.append(entry.getKey() + " ");
-                        Call<StockQuery> theQuote = service.getQuote(entry.getKey());
-                        price = theQuote.execute().body().quote.latestPrice;
-//                        list.append(Double.toString(price) + " ");
-//                        list.append(entry.getValue() + "\n");
-                    }
+
 //                    final TextView portfolio =(TextView) getView().findViewById(R.id.portfolio);
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
