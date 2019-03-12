@@ -79,7 +79,6 @@ public class PortfolioFragment extends Fragment {
 
         thread.start();
     }
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         updateList();

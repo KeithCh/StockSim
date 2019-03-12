@@ -48,14 +48,16 @@ public class MainActivity extends FragmentActivity {
     MenuItem prevMenuItem;
     PortfolioFragment portfolioFragment;
     AddOrderFragment addOrderFragment;
+    OverviewFragment overviewFragment;
     Button addOrderButton;
     DatabaseHandler db;
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         portfolioFragment = new PortfolioFragment();
         addOrderFragment = new AddOrderFragment();
+        overviewFragment = new OverviewFragment();
 //        addOrderFragment.mPreferences = mPreferences;
-        portfolioFragment.mPreferences = mPreferences;
+        adapter.addFragment(overviewFragment);
         adapter.addFragment(portfolioFragment);
         adapter.addFragment(addOrderFragment);
         viewPager.setAdapter(adapter);
@@ -81,6 +83,7 @@ public class MainActivity extends FragmentActivity {
                                 break;
                             case R.id.action_portfolio:
                                 viewPager.setCurrentItem(1);
+                                portfolioFragment.updateList();
                                 break;
                             case R.id.action_addorder:
                                 viewPager.setCurrentItem(2);
@@ -97,7 +100,7 @@ public class MainActivity extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 0) {
+                if (position == 1) {
                     portfolioFragment.updateList();
                 }
                 if (prevMenuItem != null) {

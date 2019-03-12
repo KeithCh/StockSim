@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:textSize="25sp">
+    <TextView
+        android:text="Portfolio Value"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+    <TextView
+        android:id="@+id/portfolio_value"
+        android:text="Portfolio Value"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingBottom="15dp"
+        />
+
+    <TextView
+        android:text="Stock Value"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+    <TextView
+        android:id="@+id/stock_value"
+        android:text="Stock Value"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingBottom="15dp"
+        />
+
+    <TextView
+        android:text="Cash Balance"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+    <TextView
+        android:id="@+id/cash_balance"
+        android:text="Cash Balance"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingBottom="15dp"
+        />
+
+
+</LinearLayout>
