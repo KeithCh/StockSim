@@ -1,3 +1,3 @@
 # StockSim
 
-Trade NYSE and NASDAQ stocks
+A practice tool to trade NYSE and NASDAQ stocks
