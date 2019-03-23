@@ -20,6 +20,7 @@ import com.keith.stocksim.support.IextradingInterface;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,6 @@ public class PortfolioFragment extends Fragment {
     private ListView listView;
     SharedPreferences mPreferences;
     public void updateList() {
-//        final ProgressBar pbar = (ProgressBar) findViewById(R.id.pBar);
-//        pbar.setVisibility(View.VISIBLE);
 
         Thread thread = new Thread(new Runnable() {
             Retrofit retrofit = new Retrofit.Builder()
@@ -59,7 +58,6 @@ public class PortfolioFragment extends Fragment {
                         }
                     }
 
-//                    final TextView portfolio =(TextView) getView().findViewById(R.id.portfolio);
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
@@ -69,8 +67,6 @@ public class PortfolioFragment extends Fragment {
                                     your_array_list );
 
                             listView.setAdapter(arrayAdapter);
-//                            setListText(portfolio, list.toString());
-//                            pbar.setVisibility(View.INVISIBLE);
                         }
                     });
                 } catch (IOException ie) {}
@@ -79,6 +75,45 @@ public class PortfolioFragment extends Fragment {
 
         thread.start();
     }
+//    public void updateList() {
+//        final List<String> your_array_list = new ArrayList<String>();
+//        List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
+//        for (final Stock s: allStocks) {
+//            Thread thread = new Thread(new Runnable() {
+//                Retrofit retrofit = new Retrofit.Builder()
+//                        .baseUrl("https://api.iextrading.com/")
+//                        .addConverterFactory(GsonConverterFactory.create())
+//                        .build();
+//                IextradingInterface service = retrofit.create(IextradingInterface.class);
+//
+//                @Override
+//                public void run() {
+//                    try {
+//                        Call<StockQuery> theQuote = service.getQuote(s.getTicker());
+//                        Response<StockQuery> response = theQuote.execute();
+//                        if (response.body() != null) {
+//                            price = response.body().quote.latestPrice;
+//                            your_array_list.add(s.ticker + "           " + Integer.toString(s.numShares) + "             " + price );
+//                        }
+//                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+//                                        getActivity(),
+//                                        android.R.layout.simple_list_item_1,
+//                                        your_array_list);
+//                                listView.setAdapter(arrayAdapter);
+//                            }
+//                        });
+//                    } catch (IOException ie) {}
+//                }
+//            });
+//            thread.start();
+//        }
+//        try {
+//            Thread.sleep(15);
+//        } catch (Exception e) {}
+//    }
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         updateList();
