@@ -111,9 +111,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void deleteStock(Stock stock) {
         SQLiteDatabase db = this.getWritableDatabase();
-//        db.execSQL("delete from "+ TABLE_STOCKS);
-                db.delete(TABLE_STOCKS, KEY_TICKER + " = ?",
-                new String[] { stock.getTicker() });
+        if (stock == null) db.execSQL("delete from "+ TABLE_STOCKS);
+        else {
+            db.delete(TABLE_STOCKS, KEY_TICKER + " = ?",
+            new String[] { stock.getTicker() });
+        }
         db.close();
     }
 

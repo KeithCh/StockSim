@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     <item android:id="@+id/action_overview"
         android:title="Overview"
-        android:icon="@drawable/juad" />
+        android:icon="@drawable/money" />
     <item android:id="@+id/action_portfolio"
         android:title="Portfolio"
-        android:icon="@drawable/juad" />
+        android:icon="@drawable/folder" />
     <item android:id="@+id/action_addorder"
         android:title="Add Order"
-        android:icon="@drawable/juad" />
+        android:icon="@drawable/shopping_cart" />
     </menu>
 
