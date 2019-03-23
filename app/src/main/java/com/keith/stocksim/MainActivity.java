@@ -41,8 +41,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainActivity extends FragmentActivity {
-    private SharedPreferences mPreferences;
-    private SharedPreferences.Editor mEditor;
+    SharedPreferences sharedPreferences;
     private ViewPager viewPager;
     BottomNavigationView bottomNavigationView;
     MenuItem prevMenuItem;
@@ -56,18 +55,25 @@ public class MainActivity extends FragmentActivity {
         portfolioFragment = new PortfolioFragment();
         addOrderFragment = new AddOrderFragment();
         overviewFragment = new OverviewFragment();
-//        addOrderFragment.mPreferences = mPreferences;
         adapter.addFragment(overviewFragment);
         adapter.addFragment(portfolioFragment);
         adapter.addFragment(addOrderFragment);
         viewPager.setAdapter(adapter);
     }
-
+    public void addOrder(View v) {
+        addOrderFragment.addOrder();
+    }
+    public void resetPortfolio() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat("cashBalance", 100000);
+        db.deleteStock(null);
+        editor.commit();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         db = new DatabaseHandler(this);
         //Initializing viewPager
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -79,11 +85,9 @@ public class MainActivity extends FragmentActivity {
                         switch (item.getItemId()) {
                             case R.id.action_overview:
                                 viewPager.setCurrentItem(0);
-                                portfolioFragment.updateList();
                                 break;
                             case R.id.action_portfolio:
                                 viewPager.setCurrentItem(1);
-                                portfolioFragment.updateList();
                                 break;
                             case R.id.action_addorder:
                                 viewPager.setCurrentItem(2);
@@ -100,7 +104,10 @@ public class MainActivity extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 1) {
+                if (position == 0) {
+
+                }
+                else if (position == 1) {
                     portfolioFragment.updateList();
                 }
                 if (prevMenuItem != null) {
@@ -122,10 +129,6 @@ public class MainActivity extends FragmentActivity {
             }
         });
         setupViewPager(viewPager);
-//        db.deleteStock(null);
-    }
-    public void addOrder(View v) {
-        addOrderFragment.addOrder();
     }
 }
 
