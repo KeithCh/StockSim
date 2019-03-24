@@ -1,6 +1,7 @@
 package com.keith.stocksim;
 
 import android.content.SharedPreferences;
+import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -44,11 +45,18 @@ public class PortfolioFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_portfolio, container, false);
     }
+    public String calculateReturn(double latestPrice, double startingVal, int numShares) {
+        java.text.DecimalFormat df = new java.text.DecimalFormat("0.00");
+        String formatted = df.format((latestPrice - startingVal/numShares)/(startingVal/numShares));
+        if (formatted.substring(1).equals("0.00")) {
+            return "0.00";
+        }
+        return formatted;
+    }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         super.onCreate(savedInstanceState);
-        updateList();
     }
     public void updateList() {
         list=new ArrayList<HashMap<String,String>>();
@@ -77,7 +85,7 @@ public class PortfolioFragment extends Fragment {
                             hashmap.put(COMPANY_COLUMN, s.getTicker());
                             hashmap.put(SHARES_COLUMN, String.valueOf(s.numShares));
                             hashmap.put(PRICE_COLUMN, String.valueOf(response.body().quote.latestPrice));
-                            hashmap.put(GAIN_LOSS_COLUMN, "ph");
+                            hashmap.put(GAIN_LOSS_COLUMN, calculateReturn(response.body().quote.latestPrice, s.startValue, s.numShares)+"%");
                             list.add(hashmap);
                         }
                     }

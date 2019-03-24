@@ -46,7 +46,6 @@ public class OverviewFragment extends Fragment{
                 try {
                     stockValue = 0;
                     double cashBalance = (double)((MainActivity) getActivity()).sharedPreferences.getFloat("cashBalance", 100000);
-                    final List<String> your_array_list = new ArrayList<String>();
                     List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
                     for (Stock s: allStocks) {
                         Call<StockQuery> theQuote = service.getQuote(s.getTicker());
