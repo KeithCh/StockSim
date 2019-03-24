@@ -20,6 +20,7 @@ import com.keith.stocksim.support.IextradingInterface;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,7 @@ public class PortfolioFragment extends Fragment {
     public static final String SHARES_COLUMN="shares";
     public static final String PRICE_COLUMN="price";
     public static final String GAIN_LOSS_COLUMN="gain_loss";
-
+  
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_portfolio, container, false);

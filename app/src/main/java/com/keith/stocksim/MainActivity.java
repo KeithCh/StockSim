@@ -126,6 +126,7 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
+//        resetPortfolio();
         setupViewPager(viewPager);
     }
 }
