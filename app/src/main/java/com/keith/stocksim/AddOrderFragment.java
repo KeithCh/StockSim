@@ -84,8 +84,10 @@ public class AddOrderFragment extends Fragment {
                                 db.deleteStock(new Stock(tickerSymbol, 0, 0));
                             }
                             else if (db.getStock(tickerSymbol) == null)
-                                db.addStock(new Stock(tickerSymbol, totalShares, 0));
-                            else db.updateStock(new Stock(tickerSymbol, totalShares, 0));
+                                db.addStock(new Stock(tickerSymbol, totalShares, newShares * response.body().quote.latestPrice));
+                            else {
+                                db.updateStock(new Stock(tickerSymbol, totalShares, db.getStock(tickerSymbol).getStartValue() + newShares * response.body().quote.latestPrice));
+                            }
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putFloat("cashBalance", sharedPreferences.getFloat("cashBalance", 0) - newShares * (float)response.body().quote.latestPrice);
                             editor.commit();
