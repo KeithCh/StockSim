@@ -1,6 +1,8 @@
 package com.keith.stocksim;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,6 @@ public class PortfolioListViewAdapter extends BaseAdapter {
         this.activity=activity;
         this.list=list;
     }
-
     @Override
     public int getCount() {
         return list.size();
@@ -61,7 +62,6 @@ public class PortfolioListViewAdapter extends BaseAdapter {
             holder.txtShares=(TextView) convertView.findViewById(R.id.shares_column);
             holder.txtPrice=(TextView) convertView.findViewById(R.id.price_column);
             holder.txtGainLoss=(TextView) convertView.findViewById(R.id.gain_loss_column);
-
             convertView.setTag(holder);
         }else{
 

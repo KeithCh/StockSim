@@ -61,12 +61,6 @@ public class PortfolioFragment extends Fragment {
     public void updateList() {
         list=new ArrayList<HashMap<String,String>>();
         final List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
-        HashMap<String,String> headerRow=new HashMap<String, String>();
-        headerRow.put(COMPANY_COLUMN, "Company");
-        headerRow.put(SHARES_COLUMN, "Shares");
-        headerRow.put(PRICE_COLUMN, "Price");
-        headerRow.put(GAIN_LOSS_COLUMN, "+/-");
-        list.add(headerRow);
         Thread thread = new Thread(new Runnable() {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://api.iextrading.com/")
@@ -82,7 +76,7 @@ public class PortfolioFragment extends Fragment {
                         Response<StockQuery> response = theQuote.execute();
                         if (response.body() != null) {
                             HashMap<String, String> hashmap = new HashMap<String, String>();
-                            hashmap.put(COMPANY_COLUMN, s.getTicker());
+                            hashmap.put(COMPANY_COLUMN, response.body().quote.companyName + String.format("\n(%s) ",s.getTicker()));
                             hashmap.put(SHARES_COLUMN, String.valueOf(s.numShares));
                             hashmap.put(PRICE_COLUMN, String.valueOf(response.body().quote.latestPrice));
                             hashmap.put(GAIN_LOSS_COLUMN, calculateReturn(response.body().quote.latestPrice, s.startValue, s.numShares)+"%");
