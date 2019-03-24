@@ -108,7 +108,6 @@ public class MainActivity extends FragmentActivity {
 
                 }
                 else if (position == 1) {
-                    portfolioFragment.updateList();
                 }
                 if (prevMenuItem != null) {
                     prevMenuItem.setChecked(false);
