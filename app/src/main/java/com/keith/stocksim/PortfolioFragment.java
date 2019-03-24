@@ -82,7 +82,7 @@ public class PortfolioFragment extends Fragment {
                         Response<StockQuery> response = theQuote.execute();
                         if (response.body() != null) {
                             HashMap<String, String> hashmap = new HashMap<String, String>();
-                            hashmap.put(COMPANY_COLUMN, s.getTicker());
+                            hashmap.put(COMPANY_COLUMN, response.body().quote.companyName + String.format(" (%s)",s.getTicker()));
                             hashmap.put(SHARES_COLUMN, String.valueOf(s.numShares));
                             hashmap.put(PRICE_COLUMN, String.valueOf(response.body().quote.latestPrice));
                             hashmap.put(GAIN_LOSS_COLUMN, calculateReturn(response.body().quote.latestPrice, s.startValue, s.numShares)+"%");
