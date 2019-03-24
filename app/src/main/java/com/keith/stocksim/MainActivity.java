@@ -108,7 +108,6 @@ public class MainActivity extends FragmentActivity {
 
                 }
                 else if (position == 1) {
-                    portfolioFragment.updateList();
                 }
                 if (prevMenuItem != null) {
                     prevMenuItem.setChecked(false);
@@ -117,7 +116,6 @@ public class MainActivity extends FragmentActivity {
                 {
                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                 }
-                Log.d("page", "onPageSelected: "+position);
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 prevMenuItem = bottomNavigationView.getMenu().getItem(position);
 

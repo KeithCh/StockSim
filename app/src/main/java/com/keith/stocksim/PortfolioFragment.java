@@ -22,6 +22,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +34,31 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PortfolioFragment extends Fragment {
     private double price = 0;
     private ListView listView;
-    SharedPreferences mPreferences;
+    private ArrayList<HashMap<String, String>> list;
+    public static final String COMPANY_COLUMN="company";
+    public static final String SHARES_COLUMN="shares";
+    public static final String PRICE_COLUMN="price";
+    public static final String GAIN_LOSS_COLUMN="gain_loss";
+  
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_portfolio, container, false);
+    }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        super.onCreate(savedInstanceState);
+        updateList();
+    }
     public void updateList() {
-
+        list=new ArrayList<HashMap<String,String>>();
+        final List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
+        HashMap<String,String> headerRow=new HashMap<String, String>();
+        headerRow.put(COMPANY_COLUMN, "Company");
+        headerRow.put(SHARES_COLUMN, "Shares");
+        headerRow.put(PRICE_COLUMN, "Price");
+        headerRow.put(GAIN_LOSS_COLUMN, "+/-");
+        list.add(headerRow);
         Thread thread = new Thread(new Runnable() {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://api.iextrading.com/")
@@ -43,100 +66,33 @@ public class PortfolioFragment extends Fragment {
                     .build();
             IextradingInterface service = retrofit.create(IextradingInterface.class);
 
-
             @Override
             public void run() {
                 try {
-                    final List<String> your_array_list = new ArrayList<String>();
-                    List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
                     for (Stock s: allStocks) {
                         Call<StockQuery> theQuote = service.getQuote(s.getTicker());
                         Response<StockQuery> response = theQuote.execute();
                         if (response.body() != null) {
-                            price = response.body().quote.latestPrice;
-                            your_array_list.add(s.ticker + "           " + Integer.toString(s.numShares) + "             " + price );
+                            HashMap<String, String> hashmap = new HashMap<String, String>();
+                            hashmap.put(COMPANY_COLUMN, s.getTicker());
+                            hashmap.put(SHARES_COLUMN, String.valueOf(s.numShares));
+                            hashmap.put(PRICE_COLUMN, String.valueOf(response.body().quote.latestPrice));
+                            hashmap.put(GAIN_LOSS_COLUMN, "ph");
+                            list.add(hashmap);
                         }
                     }
-
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                                    getActivity(),
-                                    android.R.layout.simple_list_item_1,
-                                    your_array_list );
-
-                            listView.setAdapter(arrayAdapter);
-                        }
-                    });
                 } catch (IOException ie) {}
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ListView listView=(ListView)getView().findViewById(R.id.list_view);
+                        PortfolioListViewAdapter adapter=new PortfolioListViewAdapter(getActivity(), list);
+                        listView.setAdapter(adapter);
+                    }
+                });
             }
         });
-
         thread.start();
     }
-//    public void updateList() {
-//        final List<String> your_array_list = new ArrayList<String>();
-//        List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
-//        for (final Stock s: allStocks) {
-//            Thread thread = new Thread(new Runnable() {
-//                Retrofit retrofit = new Retrofit.Builder()
-//                        .baseUrl("https://api.iextrading.com/")
-//                        .addConverterFactory(GsonConverterFactory.create())
-//                        .build();
-//                IextradingInterface service = retrofit.create(IextradingInterface.class);
-//
-//                @Override
-//                public void run() {
-//                    try {
-//                        Call<StockQuery> theQuote = service.getQuote(s.getTicker());
-//                        Response<StockQuery> response = theQuote.execute();
-//                        if (response.body() != null) {
-//                            price = response.body().quote.latestPrice;
-//                            your_array_list.add(s.ticker + "           " + Integer.toString(s.numShares) + "             " + price );
-//                        }
-//                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-//                                        getActivity(),
-//                                        android.R.layout.simple_list_item_1,
-//                                        your_array_list);
-//                                listView.setAdapter(arrayAdapter);
-//                            }
-//                        });
-//                    } catch (IOException ie) {}
-//                }
-//            });
-//            thread.start();
-//        }
-//        try {
-//            Thread.sleep(15);
-//        } catch (Exception e) {}
-//    }
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        updateList();
-        return inflater.inflate(R.layout.fragment_portfolio, container, false);
-    }
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        listView = (ListView) view.findViewById(R.id.list_view);
-        List<String> your_array_list = new ArrayList<String>();
-        List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
-        for (Stock s: allStocks) {
-            your_array_list.add(s.ticker + "           " + Integer.toString(s.numShares));
-        }
-
-        // This is the array adapter, it takes the context of the activity as a
-        // first parameter, the type of list view as a second parameter and your
-        // array as a third parameter.
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                your_array_list );
-
-        listView.setAdapter(arrayAdapter);
-    }
 }
+
