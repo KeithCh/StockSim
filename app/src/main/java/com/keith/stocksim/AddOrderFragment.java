@@ -92,6 +92,8 @@ public class AddOrderFragment extends Fragment {
                             editor.putFloat("cashBalance", sharedPreferences.getFloat("cashBalance", 0) - newShares * (float)response.body().quote.latestPrice);
                             editor.commit();
                             displayToast("Order Added Successfully");
+                            ((MainActivity) getActivity()).portfolioFragment.stopRepeatingTask();
+                            ((MainActivity) getActivity()).portfolioFragment.startRepeatingTask();
                         }
                     } else {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -103,6 +105,7 @@ public class AddOrderFragment extends Fragment {
 
                                 Toast toast = Toast.makeText(context, text, duration);
                                 toast.show();
+
                             }
                         });
                     }
