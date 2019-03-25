@@ -30,10 +30,12 @@ public class OverviewFragment extends Fragment{
     TextView stockValueText;
     TextView cashBalanceText;
     double stockValue;
-    public void updateOverview(View view) {
-        portfolioValueText = (TextView) view.findViewById(R.id.portfolio_value);
-        stockValueText = (TextView) view.findViewById(R.id.stock_value);
-        cashBalanceText = (TextView) view.findViewById(R.id.cash_balance);
+    private int interval = 7000;
+    private Handler handler;
+    public void updateOverview() {
+        portfolioValueText = (TextView) getView().findViewById(R.id.portfolio_value);
+        stockValueText = (TextView) getView().findViewById(R.id.stock_value);
+        cashBalanceText = (TextView) getView().findViewById(R.id.cash_balance);
         Thread thread = new Thread(new Runnable() {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://api.iextrading.com/")
@@ -65,11 +67,38 @@ public class OverviewFragment extends Fragment{
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        handler = new Handler();
         return inflater.inflate(R.layout.fragment_overview, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        updateOverview(view);
+//        updateOverview();
+        startRepeatingTask();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopRepeatingTask();
+    }
+
+    Runnable updateOverviewRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                updateOverview();
+            } finally {
+                handler.postDelayed(updateOverviewRunnable, interval);
+            }
+        }
+    };
+
+    void startRepeatingTask() {
+        updateOverviewRunnable.run();
+    }
+
+    void stopRepeatingTask() {
+        handler.removeCallbacks(updateOverviewRunnable);
     }
 }

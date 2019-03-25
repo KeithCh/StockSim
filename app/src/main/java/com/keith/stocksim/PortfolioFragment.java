@@ -40,24 +40,62 @@ public class PortfolioFragment extends Fragment {
     public static final String SHARES_COLUMN="shares";
     public static final String PRICE_COLUMN="price";
     public static final String GAIN_LOSS_COLUMN="gain_loss";
+    private int interval = 7000;
+    private Handler handler;
   
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        handler = new Handler();
         return inflater.inflate(R.layout.fragment_portfolio, container, false);
     }
-    public String calculateReturn(double latestPrice, double startingVal, int numShares) {
-        java.text.DecimalFormat df = new java.text.DecimalFormat("0.00");
-        String formatted = df.format((latestPrice - startingVal/numShares)/(startingVal/numShares));
-        if (formatted.substring(1).equals("0.00")) {
-            return "0.00";
-        }
-        return formatted;
-    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        updateList();
+        startRepeatingTask();
         super.onViewCreated(view, savedInstanceState);
         super.onCreate(savedInstanceState);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopRepeatingTask();
+    }
+
+    Runnable updateListRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                updateList();
+            } finally {
+                // 100% guarantee that this always happens, even if
+                // your update method throws an exception
+                handler.postDelayed(updateListRunnable, interval);
+            }
+        }
+    };
+
+    void startRepeatingTask() {
+        updateListRunnable.run();
+    }
+
+    void stopRepeatingTask() {
+        handler.removeCallbacks(updateListRunnable);
+    }
+
+    public String calculateReturn(double latestPrice, double startingVal, int numShares) {
+        java.text.DecimalFormat df = new java.text.DecimalFormat("0.00");
+        String formatted = df.format((latestPrice - startingVal/numShares)/(startingVal/numShares) * 100);
+        if (formatted.substring(1).equals("0.00")) {
+            return "0.00";
+        }
+        if (formatted.substring(0,1).equals("-")) {
+            return formatted;
+        }
+        return "+"+formatted;
+    }
+
     public void updateList() {
         list=new ArrayList<HashMap<String,String>>();
         final List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
