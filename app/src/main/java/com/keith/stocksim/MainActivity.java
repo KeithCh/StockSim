@@ -58,6 +58,7 @@ public class MainActivity extends FragmentActivity {
         adapter.addFragment(overviewFragment);
         adapter.addFragment(portfolioFragment);
         adapter.addFragment(addOrderFragment);
+        viewPager.setOffscreenPageLimit(5);
         viewPager.setAdapter(adapter);
     }
     public void addOrder(View v) {
@@ -105,10 +106,10 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-
+//                    overviewFragment.updateOverview();
                 }
                 else if (position == 1) {
-                    portfolioFragment.updateList();
+//                    portfolioFragment.updateList();
                 }
                 if (prevMenuItem != null) {
                     prevMenuItem.setChecked(false);
