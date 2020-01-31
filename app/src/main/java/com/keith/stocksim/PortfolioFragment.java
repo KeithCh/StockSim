@@ -87,10 +87,10 @@ public class PortfolioFragment extends Fragment {
     public String calculateReturn(double latestPrice, double startingVal, int numShares) {
         java.text.DecimalFormat df = new java.text.DecimalFormat("0.00");
         String formatted = df.format((latestPrice - startingVal/numShares)/(startingVal/numShares) * 100);
-        if (formatted.substring(1).equals("0.00")) {
+        if (formatted.equals("0.00")) {
             return "0.00";
         }
-        if (formatted.substring(0,1).equals("-")) {
+        else if (formatted.substring(0,1).equals("-")) {
             return formatted;
         }
         return "+"+formatted;

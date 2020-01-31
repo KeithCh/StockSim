@@ -1,7 +1,9 @@
 package com.keith.stocksim;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,13 +69,23 @@ public class PortfolioListViewAdapter extends BaseAdapter {
 
             holder=(ViewHolder) convertView.getTag();
         }
-
         HashMap<String, String> map=list.get(position);
         holder.txtCompany.setText(map.get(COMPANY_COLUMN));
         holder.txtShares.setText(map.get(SHARES_COLUMN));
         holder.txtPrice.setText(map.get(PRICE_COLUMN));
         holder.txtGainLoss.setText(map.get(GAIN_LOSS_COLUMN));
-
+        int textColour = Color.parseColor("#dcdcdc");
+        holder.txtCompany.setTextColor(textColour);
+        holder.txtShares.setTextColor(textColour);
+        holder.txtPrice.setTextColor(textColour);
+        String gainLossStr = map.get(GAIN_LOSS_COLUMN);
+        holder.txtGainLoss.setTextColor(textColour);
+        if (gainLossStr.charAt(0) == '-') {
+            holder.txtGainLoss.setTextColor(Color.RED);
+        }
+        else if (gainLossStr.charAt(0) == '+') {
+            holder.txtGainLoss.setTextColor(Color.GREEN);
+        }
         return convertView;
     }
 
