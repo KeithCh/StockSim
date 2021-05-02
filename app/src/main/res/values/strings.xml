@@ -1,8 +1,4 @@
 <resources>
     <string name="app_name">StockSim</string>
-    <string name="counter_text">Counter</string>
-    <string name="counterText"></string>
-    <string name="title_activity_portfolio">Portfolio</string>
 
-    <string name="portfolio"></string>
 </resources>

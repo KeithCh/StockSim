@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.keith.stocksim.repository.StockQuery;
-import com.keith.stocksim.support.IextradingInterface;
+import com.keith.stocksim.support.AlphaVantageInterface;
 
 import org.w3c.dom.Text;
 
@@ -30,7 +30,7 @@ public class OverviewFragment extends Fragment{
     TextView stockValueText;
     TextView cashBalanceText;
     double stockValue;
-    private int interval = 7000;
+    private int interval = 30000;
     private Handler handler;
     public void updateOverview() {
         portfolioValueText = (TextView) getView().findViewById(R.id.portfolio_value);
@@ -38,10 +38,10 @@ public class OverviewFragment extends Fragment{
         cashBalanceText = (TextView) getView().findViewById(R.id.cash_balance);
         Thread thread = new Thread(new Runnable() {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.iextrading.com/")
+                    .baseUrl("https://www.alphavantage.co/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-            IextradingInterface service = retrofit.create(IextradingInterface.class);
+            AlphaVantageInterface service = retrofit.create(AlphaVantageInterface.class);
 
             @Override
             public void run() {
@@ -50,10 +50,10 @@ public class OverviewFragment extends Fragment{
                     double cashBalance = (double)((MainActivity) getActivity()).sharedPreferences.getFloat("cashBalance", 100000);
                     List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
                     for (Stock s: allStocks) {
-                        Call<StockQuery> theQuote = service.getQuote(s.getTicker());
+                        Call<StockQuery> theQuote = service.getQuote(s.getTicker(), ((MainActivity) getActivity()).apikey);
                         Response<StockQuery> response = theQuote.execute();
                         if (response.body() != null) {
-                            stockValue += response.body().quote.latestPrice * s.numShares;
+                            stockValue += Double.parseDouble(response.body().quote.latestPrice) * s.numShares;
                         }
                     }
                     stockValueText.setText(String.format("$ %1.2f", stockValue));

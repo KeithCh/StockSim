@@ -1,43 +1,15 @@
 package com.keith.stocksim;
 
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import com.keith.stocksim.repository.Quote;
-import com.keith.stocksim.repository.StockQuery;
-import com.keith.stocksim.support.IextradingInterface;
-
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainActivity extends FragmentActivity {
@@ -50,6 +22,7 @@ public class MainActivity extends FragmentActivity {
     OverviewFragment overviewFragment;
     Button addOrderButton;
     DatabaseHandler db;
+    String apikey;
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         portfolioFragment = new PortfolioFragment();
@@ -61,24 +34,28 @@ public class MainActivity extends FragmentActivity {
         viewPager.setOffscreenPageLimit(5);
         viewPager.setAdapter(adapter);
     }
+
     public void addOrder(View v) {
         addOrderFragment.addOrder();
     }
+
     public void resetPortfolio() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat("cashBalance", 100000);
         db.deleteStock(null);
         editor.commit();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         db = new DatabaseHandler(this);
+        apikey = getString(R.string.alpha_vantage_api_key);
         //Initializing viewPager
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigation);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -107,15 +84,12 @@ public class MainActivity extends FragmentActivity {
             public void onPageSelected(int position) {
                 if (position == 0) {
 //                    overviewFragment.updateOverview();
-                }
-                else if (position == 1) {
+                } else if (position == 1) {
 //                    portfolioFragment.updateList();
                 }
                 if (prevMenuItem != null) {
                     prevMenuItem.setChecked(false);
-                }
-                else
-                {
+                } else {
                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                 }
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);

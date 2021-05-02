@@ -1,7 +1,5 @@
 package com.keith.stocksim;
 
-import android.content.SharedPreferences;
-import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,22 +8,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.keith.stocksim.repository.StockQuery;
-import com.keith.stocksim.support.IextradingInterface;
-
-import org.w3c.dom.Text;
+import com.keith.stocksim.support.AlphaVantageInterface;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -36,13 +27,13 @@ public class PortfolioFragment extends Fragment {
     private double price = 0;
     private ListView listView;
     private ArrayList<HashMap<String, String>> list;
-    public static final String COMPANY_COLUMN="company";
-    public static final String SHARES_COLUMN="shares";
-    public static final String PRICE_COLUMN="price";
-    public static final String GAIN_LOSS_COLUMN="gain_loss";
+    public static final String COMPANY_COLUMN = "company";
+    public static final String SHARES_COLUMN = "shares";
+    public static final String PRICE_COLUMN = "price";
+    public static final String GAIN_LOSS_COLUMN = "gain_loss";
     private int interval = 7000;
     private Handler handler;
-  
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         handler = new Handler();
@@ -86,47 +77,47 @@ public class PortfolioFragment extends Fragment {
 
     public String calculateReturn(double latestPrice, double startingVal, int numShares) {
         java.text.DecimalFormat df = new java.text.DecimalFormat("0.00");
-        String formatted = df.format((latestPrice - startingVal/numShares)/(startingVal/numShares) * 100);
+        String formatted = df.format((latestPrice - startingVal / numShares) / (startingVal / numShares) * 100);
         if (formatted.equals("0.00")) {
             return "0.00";
-        }
-        else if (formatted.substring(0,1).equals("-")) {
+        } else if (formatted.substring(0, 1).equals("-")) {
             return formatted;
         }
-        return "+"+formatted;
+        return "+" + formatted;
     }
 
     public void updateList() {
-        list=new ArrayList<HashMap<String,String>>();
+        list = new ArrayList<HashMap<String, String>>();
         final List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
         Thread thread = new Thread(new Runnable() {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.iextrading.com/")
+                    .baseUrl("https://www.alphavantage.co/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-            IextradingInterface service = retrofit.create(IextradingInterface.class);
+            AlphaVantageInterface service = retrofit.create(AlphaVantageInterface.class);
 
             @Override
             public void run() {
                 try {
-                    for (Stock s: allStocks) {
-                        Call<StockQuery> theQuote = service.getQuote(s.getTicker());
+                    for (Stock s : allStocks) {
+                        Call<StockQuery> theQuote = service.getQuote(s.getTicker(), ((MainActivity) getActivity()).apikey);
                         Response<StockQuery> response = theQuote.execute();
                         if (response.body() != null) {
                             HashMap<String, String> hashmap = new HashMap<String, String>();
-                            hashmap.put(COMPANY_COLUMN, response.body().quote.companyName + String.format("\n(%s) ",s.getTicker()));
+                            hashmap.put(COMPANY_COLUMN, s.getTicker());
                             hashmap.put(SHARES_COLUMN, String.valueOf(s.numShares));
                             hashmap.put(PRICE_COLUMN, String.valueOf(response.body().quote.latestPrice));
-                            hashmap.put(GAIN_LOSS_COLUMN, calculateReturn(response.body().quote.latestPrice, s.startValue, s.numShares)+"%");
+                            hashmap.put(GAIN_LOSS_COLUMN, calculateReturn(Double.parseDouble(response.body().quote.latestPrice), s.startValue, s.numShares) + "%");
                             list.add(hashmap);
                         }
                     }
-                } catch (IOException ie) {}
+                } catch (IOException ie) {
+                }
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        ListView listView=(ListView)getView().findViewById(R.id.list_view);
-                        PortfolioListViewAdapter adapter=new PortfolioListViewAdapter(getActivity(), list);
+                        ListView listView = (ListView) getView().findViewById(R.id.list_view);
+                        PortfolioListViewAdapter adapter = new PortfolioListViewAdapter(getActivity(), list);
                         listView.setAdapter(adapter);
                     }
                 });

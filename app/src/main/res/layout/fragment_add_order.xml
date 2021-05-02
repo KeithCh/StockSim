@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:gravity="center">
     <TextView
-        android:id="@+id/tickerText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="10dp"
@@ -28,7 +27,6 @@
          />
 
     <TextView
-        android:id="@+id/orderSizeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="10dp"
@@ -53,7 +51,6 @@
          />
 
     <Button
-        android:id="@+id/addOrderButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -61,7 +58,6 @@
         android:text="Place Order" />`
 
     <ProgressBar
-        android:id="@+id/pBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
