@@ -80,14 +80,14 @@ public class PortfolioFragment extends Fragment {
         String formatted = df.format((latestPrice - startingVal / numShares) / (startingVal / numShares) * 100);
         if (formatted.equals("0.00")) {
             return "0.00";
-        } else if (formatted.substring(0, 1).equals("-")) {
+        } else if (formatted.startsWith("-")) {
             return formatted;
         }
         return "+" + formatted;
     }
 
     public void updateList() {
-        list = new ArrayList<HashMap<String, String>>();
+        list = new ArrayList<>();
         final List<Stock> allStocks = ((MainActivity) getActivity()).db.getAllStocks();
         Thread thread = new Thread(new Runnable() {
             Retrofit retrofit = new Retrofit.Builder()
@@ -103,7 +103,7 @@ public class PortfolioFragment extends Fragment {
                         Call<StockQuery> theQuote = service.getQuote(s.getTicker(), ((MainActivity) getActivity()).apikey);
                         Response<StockQuery> response = theQuote.execute();
                         StockQuery sq = response.body();
-                        HashMap<String, String> hashmap = new HashMap<String, String>();
+                        HashMap<String, String> hashmap = new HashMap<>();
                         if (sq != null && sq.quote != null) {
                             hashmap.put(COMPANY_COLUMN, s.getTicker());
                             hashmap.put(SHARES_COLUMN, String.valueOf(s.numShares));
@@ -122,7 +122,7 @@ public class PortfolioFragment extends Fragment {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        ListView listView = (ListView) getView().findViewById(R.id.list_view);
+                        ListView listView = getView().findViewById(R.id.list_view);
                         PortfolioListViewAdapter adapter = new PortfolioListViewAdapter(getActivity(), list);
                         listView.setAdapter(adapter);
                     }
