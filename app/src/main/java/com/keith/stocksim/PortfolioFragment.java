@@ -111,7 +111,6 @@ public class PortfolioFragment extends Fragment {
                             hashmap.put(GAIN_LOSS_COLUMN, calculateReturn(Double.parseDouble(sq.quote.latestPrice), s.startValue, s.numShares) + "%");
                             list.add(hashmap);
                         } else {
-                            System.out.println("Failed to load from ");
                         }
                     }
                 } catch (IOException ie) {
