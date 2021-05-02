@@ -31,7 +31,7 @@ public class PortfolioFragment extends Fragment {
     public static final String SHARES_COLUMN = "shares";
     public static final String PRICE_COLUMN = "price";
     public static final String GAIN_LOSS_COLUMN = "gain_loss";
-    private int interval = 7000;
+    private int interval = 60000;
     private Handler handler;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,13 +102,16 @@ public class PortfolioFragment extends Fragment {
                     for (Stock s : allStocks) {
                         Call<StockQuery> theQuote = service.getQuote(s.getTicker(), ((MainActivity) getActivity()).apikey);
                         Response<StockQuery> response = theQuote.execute();
-                        if (response.body() != null) {
+                        StockQuery sq = response.body();
+                        if (sq != null && sq.quote != null) {
                             HashMap<String, String> hashmap = new HashMap<String, String>();
                             hashmap.put(COMPANY_COLUMN, s.getTicker());
                             hashmap.put(SHARES_COLUMN, String.valueOf(s.numShares));
-                            hashmap.put(PRICE_COLUMN, String.valueOf(response.body().quote.latestPrice));
-                            hashmap.put(GAIN_LOSS_COLUMN, calculateReturn(Double.parseDouble(response.body().quote.latestPrice), s.startValue, s.numShares) + "%");
+                            hashmap.put(PRICE_COLUMN, String.format("$ %1.2f", Float.valueOf(sq.quote.latestPrice)));
+                            hashmap.put(GAIN_LOSS_COLUMN, calculateReturn(Double.parseDouble(sq.quote.latestPrice), s.startValue, s.numShares) + "%");
                             list.add(hashmap);
+                        } else {
+                            System.out.println("Failed to load from ");
                         }
                     }
                 } catch (IOException ie) {

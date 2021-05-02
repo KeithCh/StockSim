@@ -52,8 +52,9 @@ public class OverviewFragment extends Fragment{
                     for (Stock s: allStocks) {
                         Call<StockQuery> theQuote = service.getQuote(s.getTicker(), ((MainActivity) getActivity()).apikey);
                         Response<StockQuery> response = theQuote.execute();
-                        if (response.body() != null) {
-                            stockValue += Double.parseDouble(response.body().quote.latestPrice) * s.numShares;
+                        StockQuery sq = response.body();
+                        if (sq != null && sq.quote != null) {
+                            stockValue += Double.parseDouble(sq.quote.latestPrice) * s.numShares;
                         }
                     }
                     stockValueText.setText(String.format("$ %1.2f", stockValue));

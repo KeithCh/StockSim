@@ -60,9 +60,10 @@ public class AddOrderFragment extends Fragment {
                     Call<StockQuery> theQuote = service.getQuote(tickerSymbol, ((MainActivity) getActivity()).apikey);
                     Response<StockQuery> response = theQuote.execute();
                     Integer oldShares = (db.getStock(tickerSymbol) != null) ? db.getStock(tickerSymbol).numShares : 0;
+                    StockQuery sq = response.body();
                     // ticker is valid
-                    if (response.body() != null) {
-                        Float latestPrice = Float.parseFloat(response.body().quote.latestPrice);
+                    if (sq != null && sq.quote != null) {
+                        Float latestPrice = Float.parseFloat(sq.quote.latestPrice);
                         EditText sharesEdit = (EditText) getView().findViewById(R.id.orderSizeEdit);
                         if (sharesEdit.getText().toString().equals("")) return;
                         Integer newShares = Integer.parseInt(sharesEdit.getText().toString());
