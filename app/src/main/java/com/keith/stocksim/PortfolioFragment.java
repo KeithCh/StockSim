@@ -103,15 +103,19 @@ public class PortfolioFragment extends Fragment {
                         Call<StockQuery> theQuote = service.getQuote(s.getTicker(), ((MainActivity) getActivity()).apikey);
                         Response<StockQuery> response = theQuote.execute();
                         StockQuery sq = response.body();
+                        HashMap<String, String> hashmap = new HashMap<String, String>();
                         if (sq != null && sq.quote != null) {
-                            HashMap<String, String> hashmap = new HashMap<String, String>();
                             hashmap.put(COMPANY_COLUMN, s.getTicker());
                             hashmap.put(SHARES_COLUMN, String.valueOf(s.numShares));
                             hashmap.put(PRICE_COLUMN, String.format("$ %1.2f", Float.valueOf(sq.quote.latestPrice)));
                             hashmap.put(GAIN_LOSS_COLUMN, calculateReturn(Double.parseDouble(sq.quote.latestPrice), s.startValue, s.numShares) + "%");
-                            list.add(hashmap);
                         } else {
+                            hashmap.put(COMPANY_COLUMN, s.getTicker());
+                            hashmap.put(SHARES_COLUMN, String.valueOf(s.numShares));
+                            hashmap.put(PRICE_COLUMN, "N/A");
+                            hashmap.put(GAIN_LOSS_COLUMN, "N/A");
                         }
+                        list.add(hashmap);
                     }
                 } catch (IOException ie) {
                 }
